@@ -9,11 +9,9 @@ void yyerror(const char *str) {
 int sym[26];
 
 %}
-
-%token T_INTEGER T_FLOAT T_VAR T_IDENTIFIER T_SEMICOLON T_EQUAL
-%token T_BEGIN T_END T_LOOP T_FOR T_SUB T_IF T_THEN T_ELSE T_ASSIGN T_PRINT
-%token T_PLUS T_MINUS T_DIVIDE T_MULTIPLY T_MODULO T_NOT T_COMMA T_RETURN
-%token T_BINARY_OR T_BINARY_AND T_OPEN_BRACKET T_CLOSE_BRACKET T_UNARY_MINUS
+%token T_VAR T_BEGIN T_END T_LOOP T_FOR T_SUB T_IF T_THEN T_ELSE T_PRINT T_RETURN
+%token T_ASSIGN T_SEMICOLON T_EQUAL T_PLUS T_MINUS T_DIVIDE T_MULTIPLY T_MODULO T_NOT T_COMMA T_BINARY_OR T_BINARY_AND T_OPEN_BRACKET T_CLOSE_BRACKET T_UNARY_MINUS
+%token T_INTEGER T_FLOAT T_IDENTIFIER
 %start stmt
 
 %left T_BINARY_OR
@@ -37,9 +35,9 @@ number: T_INTEGER
 
 arguments: /* empty */
          | T_IDENTIFIER
-         | T_IDENTIFIER T_COMMA arguments
+         | arguments T_COMMA T_IDENTIFIER
 
-expr: T_VAR T_IDENTIFIER T_ASSIGN expr {sym[$2] = $4; printf("%c", $1);}
+expr: T_VAR T_IDENTIFIER T_ASSIGN expr {printf("assign %c", $1); sym[$2] = $4;}
     | T_PRINT expr {printf("%d\n", $2);}
     | number {$$ = $1;}
     | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {printf("calling function");}
