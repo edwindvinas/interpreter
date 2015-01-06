@@ -18,9 +18,8 @@ not return T_NOT;
 return return T_RETURN;
 print return T_PRINT;
 
-[0123456789]+ {yylval = atoi(yytext); return T_INTEGER;}
-[0123456789]+\.[0123456789]+ {yylval = atof(yytext); return T_FLOAT;}
 [a-zA-Z][0-9a-zA-Z_]* {yylval = *yytext - 'a'; return T_IDENTIFIER;}
+[0123456789]+ {yylval = atoi(yytext); return T_INTEGER;}
 ; return T_SEMICOLON;
 , return T_COMMA;
 = return T_EQUAL;

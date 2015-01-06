@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void yyerror(const char *str) {
@@ -8,10 +9,13 @@ void yyerror(const char *str) {
 
 int sym[26];
 
+extern FILE *yyin;
+
 %}
 %token T_VAR T_BEGIN T_END T_LOOP T_FOR T_SUB T_IF T_THEN T_ELSE T_PRINT T_RETURN
 %token T_ASSIGN T_SEMICOLON T_EQUAL T_PLUS T_MINUS T_DIVIDE T_MULTIPLY T_MODULO T_NOT T_COMMA T_BINARY_OR T_BINARY_AND T_OPEN_BRACKET T_CLOSE_BRACKET T_UNARY_MINUS
-%token T_INTEGER T_FLOAT T_IDENTIFIER
+%token T_IDENTIFIER
+%token T_INTEGER
 %start stmt
 
 %left T_BINARY_OR
@@ -31,13 +35,12 @@ stmt: /* empty */
     | T_IF expr T_THEN stmt T_ELSE stmt
 
 number: T_INTEGER
-      | T_FLOAT
 
 arguments: /* empty */
          | T_IDENTIFIER
          | arguments T_COMMA T_IDENTIFIER
 
-expr: T_VAR T_IDENTIFIER T_ASSIGN expr {printf("assign %c", $1); sym[$2] = $4;}
+expr: T_VAR T_IDENTIFIER T_ASSIGN expr {sym[$2] = $4;}
     | T_PRINT expr {printf("%d\n", $2);}
     | number {$$ = $1;}
     | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {printf("calling function");}
@@ -55,3 +58,25 @@ expr: T_VAR T_IDENTIFIER T_ASSIGN expr {printf("assign %c", $1); sym[$2] = $4;}
 
 
 %%
+
+void scan_string(const char* str) {
+    yy_switch_to_buffer(yy_scan_string(str));
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Please provide a path to a program as the first parameter!\n");
+        return EXIT_FAILURE;
+    } else {
+        yyin = fopen(argv[1], "r");
+
+        if (yyin == NULL) {
+            printf("Could not read file!\n");
+            return EXIT_FAILURE;
+        }
+
+        yyparse();
+        return 0;
+    }
+}
+
