@@ -3,13 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern FILE* yyin;
+extern int* yylineno;
+
 void yyerror(const char *str) {
-    fprintf(stderr, "error: %s\n", str);
+    fprintf(stderr, "line %d: %s\n", yylineno, str);
 }
 
-int sym[26];
+int symbols[26];
+int functions[26];
 
-extern FILE *yyin;
+
 
 %}
 %token T_VAR T_BEGIN T_END T_LOOP T_FOR T_SUB T_IF T_THEN T_ELSE T_PRINT T_RETURN
@@ -27,12 +31,12 @@ extern FILE *yyin;
 %%
 stmt: /* empty */
     | T_LOOP stmt T_FOR expr
-    | T_LOOP T_FOR expr stmt
+    | T_LOOP T_FOR number stmt
     | stmt expr T_SEMICOLON
     | T_BEGIN stmt T_END
-    | T_IF expr T_THEN stmt
+    | T_IF expr T_THEN stmt {printf("if\n");}
     | T_SUB T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET stmt
-    | T_IF expr T_THEN stmt T_ELSE stmt
+    | T_IF expr T_THEN stmt T_ELSE stmt {printf("if\n");}
 
 number: T_INTEGER
 
@@ -40,11 +44,12 @@ arguments: /* empty */
          | T_IDENTIFIER
          | arguments T_COMMA T_IDENTIFIER
 
-expr: T_VAR T_IDENTIFIER T_ASSIGN expr {sym[$2] = $4;}
+expr: T_VAR T_IDENTIFIER T_ASSIGN expr {symbols[$2] = $4;}
     | T_PRINT expr {printf("%d\n", $2);}
     | number {$$ = $1;}
+    | expr T_EQUAL expr {$$ = $1 == $2;}
     | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {printf("calling function");}
-    | T_IDENTIFIER {$$ = sym[$1];}
+    | T_IDENTIFIER {$$ = symbols[$1];}
     | expr T_PLUS expr {$$ = $1 + $3;}
     | expr T_MINUS expr {$$ = $1 - $3;}
     | expr T_MULTIPLY expr {$$ = $1 * $3;}

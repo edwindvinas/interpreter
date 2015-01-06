@@ -33,7 +33,7 @@ print return T_PRINT;
 & return T_BINARY_AND;
 \( return T_OPEN_BRACKET;
 \) return T_CLOSE_BRACKET;
-[ \t\r\n]+ /* ignore whitespace */;
-
+[ \t\r]+ /* ignore whitespace */;
+\n {yylineno++;}
 . printf("Encountered invalid character");
 %%
