@@ -42,5 +42,10 @@ typedef struct sub {
     Node* arguments;
 } Sub;
 
+typedef struct scope {
+    int symbols[26];
+    struct scope* previous_scope;
+} Scope;
+
 Node* create_node(NodeType type, Node* left, Node* middle, Node* right, int value);
 char* node_type_to_description(NodeType type);

@@ -4,43 +4,74 @@
 #include "interpreter.h"
 #include "nodes.h"
 
-int symbols[26];
+Scope* scope;
 Sub* subs[26];
 
-
-void debug_node(Node* node, int indention) {
-    char *indentionSpaces = (char*)malloc(sizeof(char)*indention + 1);
+/**
+ * Creates a new scope
+ */
+Scope* push_scope(Scope* previous_scope) {
+    Scope* newScope = malloc(sizeof(Scope));
     int i;
-    for (i=0; i<indention; i++) {
-        indentionSpaces[i] = ' ';
+
+    if (previous_scope == NULL) {
+        newScope->previous_scope = NULL;
+
+        for (i=0; i<26; i+=1) {
+            newScope->symbols[i] = 0;
+        }
+
+    } else {
+        newScope->previous_scope = previous_scope;
+        // if a scope exists, copy all the values from the previous scope so we
+        // dont change them; this language is function scoped (like JavaScript muhahaha)
+        for (i=0; i<26; i+=1) {
+            newScope->symbols[i] = previous_scope->symbols[i];
+        }
     }
-    indentionSpaces[indention] = '\0';
 
-    int type = -1;
-    int value = -1;
-    char* msg = "%sNode with type %s\n";
-    if (node != NULL) {
-        type = node->type;
-        if (type == N_VARIABLE) {
-            value = node->value + 'a';
-            msg = "%sNode with type %s and value %c\n";
-        } else {
-            value = node->value;
-        }
+    return newScope;
+}
 
-        if (type == N_VARIABLE || type == N_ASSIGNMENT || type == N_INT) {
-            printf(msg, indentionSpaces,
-                node_type_to_description(type), value);
-        } else {
-            printf(msg, indentionSpaces, node_type_to_description(type));
-        }
+/**
+ * Pops the current one and returns the previous scope
+ */
+Scope* pop_scope(Scope* scope) {
+    if (scope->previous_scope == NULL) {
+        printf("Error! Popping last scope\n");
+        exit(EXIT_FAILURE);
+    } else {
+        Scope* previous_scope = scope->previous_scope;
+        free(scope);
+        return previous_scope;
     }
 }
 
-int call_sub(Sub* sub, Node* arguments) {
+int call_sub(Sub* sub, Node* arguments, int debug, int indention) {
+    // a function call creates a new scope and initializes the values
+    scope = push_scope(scope);
 
+    while (arguments->type != N_END_OF_ARG_LIST) {
+        int symbol = arguments->value;
+        scope->symbols[symbol] = scope->previous_scope->symbols[symbol];
+    }
+
+    int result = interpret(sub->stmt, debug, indention);
+    scope = pop_scope(scope);
+    return result;
 }
 
+/**
+ * Used to intialize the values like the scope to start interpreting
+ */
+int start_interpreter(Node* node, int debug, int indention) {
+    scope = push_scope(NULL);
+    return interpret(node, debug, indention);
+}
+
+/**
+ * Interpret a node
+ */
 int interpret(Node* node, int debug, int indention) {
     if (debug == 1) {
         debug_node(node, indention);
@@ -79,7 +110,7 @@ int interpret(Node* node, int debug, int indention) {
             return node->value;
 
         case N_VARIABLE:
-            return symbols[node->value];
+            return scope->symbols[node->value];
 
         case N_EQUAL:
             return interpret(node->left, debug, indention) == interpret(node->middle, debug, indention);
@@ -106,7 +137,7 @@ int interpret(Node* node, int debug, int indention) {
             return interpret(node->left, debug, indention) & interpret(node->middle, debug, indention);
 
         case N_ASSIGNMENT:
-            symbols[node->value] = interpret(node->left, debug, indention);
+            scope->symbols[node->value] = interpret(node->left, debug, indention);
             return 0;
 
         case N_NOT:
@@ -148,7 +179,7 @@ int interpret(Node* node, int debug, int indention) {
             return 0;
 
         case N_CALL:
-            return call_sub(subs[node->value], node->left);
+            return call_sub(subs[node->value], node->left, debug, indention);
 
         case N_END_OF_PROGRAM:
             return 0;
@@ -159,4 +190,37 @@ int interpret(Node* node, int debug, int indention) {
         }
     }
     return 0;
+}
+
+
+/**
+ * Prints debug statements for a node
+ */
+void debug_node(Node* node, int indention) {
+    char *indentionSpaces = (char*)malloc(sizeof(char)*indention + 1);
+    int i;
+    for (i=0; i<indention; i++) {
+        indentionSpaces[i] = ' ';
+    }
+    indentionSpaces[indention] = '\0';
+
+    int type = -1;
+    int value = -1;
+    char* msg = "%sNode with type %s\n";
+    if (node != NULL) {
+        type = node->type;
+        if (type == N_VARIABLE) {
+            value = node->value + 'a';
+            msg = "%sNode with type %s and value %c\n";
+        } else {
+            value = node->value;
+        }
+
+        if (type == N_VARIABLE || type == N_ASSIGNMENT || type == N_INT) {
+            printf(msg, indentionSpaces,
+                node_type_to_description(type), value);
+        } else {
+            printf(msg, indentionSpaces, node_type_to_description(type));
+        }
+    }
 }

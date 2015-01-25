@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
     }
 
     yyparse();
-    interpret(root, options->debug, 0);
+    start_interpreter(root, options->debug, 0);
     return EXIT_SUCCESS;
 }
 
