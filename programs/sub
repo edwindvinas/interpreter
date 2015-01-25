@@ -1,6 +1,6 @@
-sub a (a, b) begin
+sub c (a, b) begin
     print a;
     print b;
 end
 
-a(1, 2);
+c(1, 2);

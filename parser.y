@@ -27,6 +27,9 @@ Node* root;
 %type <node> stmt
 %type <node> expr
 %type <node> arguments
+%type <node> argument_list
+%type <node> call_arguments
+%type <node> call_argument_list
 %type <integer> T_INTEGER
 %type <integer> T_IDENTIFIER
 
@@ -53,19 +56,27 @@ stmt: T_LOOP stmt T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 0
     | expr T_SEMICOLON
     | T_BEGIN stmts T_END {$$ = $2;}
     | T_IF expr T_THEN stmt {$$ = create_node(N_IF, $2, $4, NULL, 0);}
-    | T_SUB T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET stmts {$$ = create_node(N_SUB, $4, $6, NULL, $2);}
-    | T_IF expr T_THEN stmts T_ELSE stmts {$$ = create_node(N_IF_ELSE, $2, $4, $6, 0);}
+    | T_SUB T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET stmt {$$ = create_node(N_SUB, $4, $6, NULL, $2);}
+    | T_IF expr T_THEN stmt T_ELSE stmt {$$ = create_node(N_IF_ELSE, $2, $4, $6, 0);}
 
 arguments: /* empty */ {$$ = create_node(N_END_OF_ARG_LIST, NULL, NULL, NULL, 0);}
-         | T_IDENTIFIER {$$ = create_node(N_ARGUMENT, NULL, NULL, NULL, $1);}
-         | arguments T_COMMA T_IDENTIFIER {$$ = create_node(N_ARGUMENT, $1, NULL, NULL, $3);}
+         | argument_list
+
+argument_list: T_IDENTIFIER {$$ = create_node(N_ARGUMENT, NULL, NULL, NULL, $1);}
+             | T_IDENTIFIER T_COMMA argument_list {$$ = create_node(N_ARGUMENT, $3, NULL, NULL, $1);}
+
+call_arguments: /* empty */ {$$ = create_node(N_END_OF_ARG_LIST, NULL, NULL, NULL, 0);}
+         | call_argument_list
+
+call_argument_list: expr {$$ = create_node(N_ARGUMENT, $1, NULL, NULL, 0);}
+                  | expr T_COMMA call_argument_list {$$ = create_node(N_ARGUMENT, $1, $3, NULL, 0);}
 
 expr:
     T_VAR T_IDENTIFIER T_ASSIGN expr {$$ = create_node(N_ASSIGNMENT, $4, NULL, NULL, $2);}
     | T_PRINT expr {$$ = create_node(N_PRINT, $2, NULL, NULL, 0);}
     | T_INTEGER {$$ = create_node(N_INT, NULL, NULL, NULL, $1);}
     | expr T_EQUAL expr {$$ = create_node(N_EQUAL, $1, $3, NULL, 0);}
-    | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {$$ = create_node(N_CALL, $3, NULL, NULL, $1);}
+    | T_IDENTIFIER T_OPEN_BRACKET call_arguments T_CLOSE_BRACKET {$$ = create_node(N_CALL, $3, NULL, NULL, $1);}
     | T_IDENTIFIER {$$ = create_node(N_VARIABLE, NULL, NULL, NULL, $1);}
     | expr T_BINARY_OR expr {$$ = create_node(N_BINARY_OR, $1, $3, NULL, 0);}
     | expr T_BINARY_AND expr {$$ = create_node(N_BINARY_AND, $1, $3, NULL, 0);}

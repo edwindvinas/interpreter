@@ -47,13 +47,18 @@ Scope* pop_scope(Scope* scope) {
     }
 }
 
-int call_sub(Sub* sub, Node* arguments, int debug, int indention) {
+int call_sub(Sub* sub, Node* callArguments, int debug, int indention) {
     // a function call creates a new scope and initializes the values
     scope = push_scope(scope);
-
-    while (arguments->type != N_END_OF_ARG_LIST) {
-        int symbol = arguments->value;
-        scope->symbols[symbol] = scope->previous_scope->symbols[symbol];
+    Node* subArg = sub->arguments;
+    while (subArg != NULL
+           && callArguments != NULL
+           && callArguments->type != N_END_OF_ARG_LIST
+           && subArg->type != N_END_OF_ARG_LIST) {
+        int symbol = subArg->value;
+        scope->symbols[symbol] = interpret(callArguments->left, debug, indention);
+        callArguments = callArguments->middle;
+        subArg = subArg->left;
     }
 
     int result = interpret(sub->stmt, debug, indention);
