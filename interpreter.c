@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "interpreter.h"
@@ -23,7 +24,7 @@ int interpret(Node* node) {
             }
             return 0;
 
-        case N_IF:
+        case N_IF_ELSE:
             if (interpret(node->left)) {
                 return interpret(node->middle);
             } else {
@@ -66,7 +67,7 @@ int interpret(Node* node) {
             return 0;
 
         case N_NOT:
-            return interpret(!node->left);
+            return ! interpret(node->left);
 
         case N_MINUS:
             return -1 * interpret(node->left);
@@ -83,7 +84,7 @@ int interpret(Node* node) {
             }
 
         default:
-            printf("Unknown node type!\n", );
+            printf("Unknown node type!\n");
             return EXIT_FAILURE;
         }
     }

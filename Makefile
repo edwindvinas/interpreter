@@ -1,7 +1,7 @@
 all: clean
 	lex lexer.l
 	yacc -d -v parser.y
-	cc lex.yy.c y.tab.c nodes.c -o interpreter -lfl
+	cc lex.yy.c y.tab.c interpreter.c nodes.c -o interpreter -lfl
 
 clean:
 	rm -f interpreter
