@@ -1,5 +1,10 @@
 # Simple parser
 
+## Authors:
+
+* Bernhard Posselt
+* Christoph Sladkovsky
+
 ## Compiling
 Install **bison** and **make** and run:
 

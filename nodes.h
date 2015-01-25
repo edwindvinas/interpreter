@@ -18,7 +18,11 @@ typedef enum {
     N_CALL,
     N_PRINT,
     N_STMT,
-    N_EQUAL
+    N_EQUAL,
+    N_NOT,
+    N_MINUS,
+    N_RETURN,
+    N_ARGUMENT
 } NodeType;
 
 typedef struct node {

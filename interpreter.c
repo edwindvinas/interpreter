@@ -9,7 +9,9 @@ int interpret(Node* node) {
 
     case N_STMT:
         interpret(node->left);
-        interpret(node->middle);
+        if (node->middle != NULL) {
+            interpret(node->middle);
+        }
         break;
 
     case N_IF:
@@ -53,6 +55,12 @@ int interpret(Node* node) {
     case N_ASSIGNMENT:
         symbols[(int) node->left] = interpret(node->middle);
         return 0;
+
+    case N_NOT:
+        return interpret(!node->left);
+
+    case N_MINUS:
+        return -1 * interpret(node->left);
 
     case N_PRINT:
         printf("%d\n", interpret(node->left));
