@@ -1,0 +1,5 @@
+var a := 0;
+loop for 3 begin
+    var a := a + 1;
+    print a;
+end

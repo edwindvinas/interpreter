@@ -21,7 +21,7 @@ void debug_node(Node* node, int indention) {
 
     int type = -1;
     int value = -1;
-    char* msg = "%sNode with type %s and value %d\n";
+    char* msg = "%sNode with type %s\n";
     if (node != NULL) {
         type = node->type;
         if (type == N_VARIABLE) {
@@ -30,9 +30,14 @@ void debug_node(Node* node, int indention) {
         } else {
             value = node->value;
         }
+
+        if (type == N_VARIABLE || type == N_ASSIGNMENT || type == N_INT) {
+            printf(msg, indentionSpaces,
+                node_type_to_description(type), value);
+        } else {
+            printf(msg, indentionSpaces, node_type_to_description(type));
+        }
     }
-    printf(msg, indentionSpaces,
-        node_type_to_description(type), value);
 }
 
 int interpret(Node* node, int debug, int indention) {
@@ -43,6 +48,7 @@ int interpret(Node* node, int debug, int indention) {
 
     if (node != NULL) {
         int i;
+        int times;
 
         switch (node->type) {
 
@@ -119,13 +125,15 @@ int interpret(Node* node, int debug, int indention) {
             }
 
         case N_LOOP_BLOCK_FOR:
-            for (i=0; i<interpret(node->middle, debug, indention); i++) {
+            times = interpret(node->middle, debug, indention);
+            for (i=0; i<times; i+=1) {
                 interpret(node->left, debug, indention);
             }
             return 0;
 
         case N_LOOP_FOR_BLOCK:
-            for (i=0; i<interpret(node->left, debug, indention); i++) {
+            times = interpret(node->left, debug, indention);
+            for (i=0; i<times; i+=1) {
                 interpret(node->middle, debug, indention);
             }
             return 0;
@@ -143,7 +151,7 @@ int interpret(Node* node, int debug, int indention) {
             return 0;
 
         case N_END_OF_PROGRAM:
-            exit(EXIT_SUCCESS);
+            return 0;
 
         default:
             printf("Unknown node type!\n");

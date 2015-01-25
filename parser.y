@@ -48,8 +48,8 @@ root: stmts {$$ = $1; root = $$; }
 stmts: /* empty */ {$$ = create_node(N_END_OF_PROGRAM, NULL, NULL, NULL, 0);}
      | stmt stmts {$$ = create_node(N_STMT, $1, $2, NULL, 0);}
 
-stmt: T_LOOP stmts T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 0);}
-    | T_LOOP T_FOR expr stmts {$$ = create_node(N_LOOP_FOR_BLOCK, $3, $4, NULL, 0);}
+stmt: T_LOOP stmt T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 0);}
+    | T_LOOP T_FOR expr stmt {$$ = create_node(N_LOOP_FOR_BLOCK, $3, $4, NULL, 0);}
     | expr T_SEMICOLON
     | T_BEGIN stmts T_END {$$ = $2;}
     | T_IF expr T_THEN stmt {$$ = create_node(N_IF, $2, $4, NULL, 0);}
