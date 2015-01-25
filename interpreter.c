@@ -21,11 +21,17 @@ void debug_node(Node* node, int indention) {
 
     int type = -1;
     int value = -1;
+    char* msg = "%sNode with type %s and value %d\n";
     if (node != NULL) {
         type = node->type;
-        value = node->value;
+        if (type == N_VARIABLE) {
+            value = node->value + 'a';
+            msg = "%sNode with type %s and value %c\n";
+        } else {
+            value = node->value;
+        }
     }
-    printf("%sNode with type %s and value %d\n", indentionSpaces,
+    printf(msg, indentionSpaces,
         node_type_to_description(type), value);
 }
 
