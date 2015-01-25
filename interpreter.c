@@ -7,6 +7,10 @@
 int symbols[26];
 int subs[26];
 
+int* create_symbol_table(int length) {
+    return malloc(sizeof(int)*26);
+}
+
 void debug_node(Node* node, int indention) {
     char *indentionSpaces = (char*)malloc(sizeof(char)*indention + 1);
     int i;
@@ -88,7 +92,7 @@ int interpret(Node* node, int debug, int indention) {
             return interpret(node->left, debug, indention) & interpret(node->middle, debug, indention);
 
         case N_ASSIGNMENT:
-            symbols[node->value] = interpret(node->middle, debug, indention);
+            symbols[node->value] = interpret(node->left, debug, indention);
             return 0;
 
         case N_NOT:
@@ -131,6 +135,9 @@ int interpret(Node* node, int debug, int indention) {
         case N_CALL:
             printf("Not yet implementd\n");
             return 0;
+
+        case N_END_OF_PROGRAM:
+            exit(EXIT_SUCCESS);
 
         default:
             printf("Unknown node type!\n");

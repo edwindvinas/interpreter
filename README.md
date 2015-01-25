@@ -14,3 +14,9 @@ Install **bison** and **make** and run:
 To execute a file pass the path as its first argument like:
 
     ./compiler programs/calculations
+
+## Debugging
+
+Run:
+
+    ./compiler programs/calculations -d
