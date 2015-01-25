@@ -15,11 +15,14 @@ void debugNode(Node* node, int indention) {
     }
     indentionSpaces[indention] = '\0';
 
-    int type = 0;
+    int type = -1;
+    int value = -1;
     if (node != NULL) {
         type = node->type;
+        value = node->value;
     }
-    printf("%s%s %s\n", indentionSpaces, "Node with type", node_type_to_description(type));
+    printf("%sNode with type %s and value %d\n", indentionSpaces,
+        node_type_to_description(type), value);
 }
 
 int interpret(Node* node, int debug, int indention) {
