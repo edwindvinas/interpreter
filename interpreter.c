@@ -5,11 +5,8 @@
 #include "nodes.h"
 
 int symbols[26];
-int subs[26];
+Sub* subs[26];
 
-int* create_symbol_table(int length) {
-    return malloc(sizeof(int)*26);
-}
 
 void debug_node(Node* node, int indention) {
     char *indentionSpaces = (char*)malloc(sizeof(char)*indention + 1);
@@ -40,6 +37,10 @@ void debug_node(Node* node, int indention) {
     }
 }
 
+int call_sub(Sub* sub, Node* arguments) {
+
+}
+
 int interpret(Node* node, int debug, int indention) {
     if (debug == 1) {
         debug_node(node, indention);
@@ -49,6 +50,7 @@ int interpret(Node* node, int debug, int indention) {
     if (node != NULL) {
         int i;
         int times;
+        Sub* sub;
 
         switch (node->type) {
 
@@ -139,16 +141,14 @@ int interpret(Node* node, int debug, int indention) {
             return 0;
 
         case N_SUB:
-            printf("Not yet implementd\n");
-            return 0;
-
-        case N_ARGUMENT:
-            printf("Not yet implementd\n");
+            sub = malloc(sizeof(Sub));
+            sub->stmt = node->middle;
+            sub->arguments = node->left;
+            subs[node->value] = sub;
             return 0;
 
         case N_CALL:
-            printf("Not yet implementd\n");
-            return 0;
+            return call_sub(subs[node->value], node->left);
 
         case N_END_OF_PROGRAM:
             return 0;

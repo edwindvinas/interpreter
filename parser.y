@@ -65,7 +65,7 @@ expr:
     | T_PRINT expr {$$ = create_node(N_PRINT, $2, NULL, NULL, 0);}
     | T_INTEGER {$$ = create_node(N_INT, NULL, NULL, NULL, $1);}
     | expr T_EQUAL expr {$$ = create_node(N_EQUAL, $1, $3, NULL, 0);}
-    | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {printf("calling function");}
+    | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {$$ = create_node(N_CALL, $3, NULL, NULL, $1);}
     | T_IDENTIFIER {$$ = create_node(N_VARIABLE, NULL, NULL, NULL, $1);}
     | expr T_BINARY_OR expr {$$ = create_node(N_BINARY_OR, $1, $3, NULL, 0);}
     | expr T_BINARY_AND expr {$$ = create_node(N_BINARY_AND, $1, $3, NULL, 0);}
