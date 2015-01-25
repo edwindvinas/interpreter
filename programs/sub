@@ -1,6 +1,14 @@
-sub c (a, b) begin
-    print a;
-    print b;
+var a := 4;
+var c := 5;
+
+sub c (a) begin
+    a(a, c);
 end
 
-c(1, 2);
+sub a (a, b) begin
+    print a;
+    print b;
+    print c;
+end
+
+c(10);
