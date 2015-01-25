@@ -47,7 +47,8 @@ root: stmts {$$ = $1; root = $$; }
 stmts: /* empty */ {$$ = NULL;}
      | stmt stmts {$$ = create_node(N_STMT, $1, $2, NULL, 0);}
 
-stmt: T_LOOP stmts T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 0);}
+stmt: /* empty */ {$$ = NULL;}
+    | T_LOOP stmts T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 0);}
     | T_LOOP T_FOR expr stmts {$$ = create_node(N_LOOP_FOR_BLOCK, $3, $4, NULL, 0);}
     | stmt expr T_SEMICOLON
     | T_BEGIN stmts T_END {$$ = $2;}
@@ -58,7 +59,8 @@ stmt: T_LOOP stmts T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 
 arguments: T_IDENTIFIER {$$ = create_node(N_ARGUMENT, NULL, NULL, NULL, $1);}
          | arguments T_COMMA T_IDENTIFIER {$$ = create_node(N_ARGUMENT, $1, NULL, NULL, $3);}
 
-expr: T_VAR T_IDENTIFIER T_ASSIGN expr {$$ = create_node(N_ASSIGNMENT, $4, NULL, NULL, $2);}
+expr:
+    T_VAR T_IDENTIFIER T_ASSIGN expr {$$ = create_node(N_ASSIGNMENT, $4, NULL, NULL, $2);}
     | T_PRINT expr {$$ = create_node(N_PRINT, $2, NULL, NULL, 0);}
     | T_INTEGER {$$ = create_node(N_INT, NULL, NULL, NULL, $1);}
     | expr T_EQUAL expr {$$ = create_node(N_EQUAL, $1, $3, NULL, 0);}
@@ -97,8 +99,8 @@ int main(int argc, char *argv[]) {
         }
 
         yyparse();
-        interpret(root);
-        return 0;
+        interpret(root, 1, 0);
+        return EXIT_SUCCESS;
     }
 }
 
