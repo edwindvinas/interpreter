@@ -1,4 +1,4 @@
-compiler
+interpreter
 *.output
 *.yy.c
 *.tab.*
