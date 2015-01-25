@@ -88,7 +88,7 @@ int interpret(Node* node, int debug, int indention) {
             return interpret(node->left, debug, indention) & interpret(node->middle, debug, indention);
 
         case N_ASSIGNMENT:
-            symbols[(int) node->value] = interpret(node->middle, debug, indention);
+            symbols[node->value] = interpret(node->middle, debug, indention);
             return 0;
 
         case N_NOT:

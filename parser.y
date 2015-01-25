@@ -5,6 +5,7 @@
 
 #include "nodes.h"
 #include "interpreter.h"
+#include "cmd.h"
 
 extern FILE* yyin;
 extern int* yylineno;
@@ -86,20 +87,17 @@ void scan_string(const char* str) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        printf("Please provide a path to a program as the first parameter!\n");
+    Options* options = parse_cmd(argc, argv);
+
+    yyin = fopen(options->file, "r");
+
+    if (yyin == NULL) {
+        printf("Could not read file!\n");
         return EXIT_FAILURE;
-    } else {
-        yyin = fopen(argv[1], "r");
-
-        if (yyin == NULL) {
-            printf("Could not read file!\n");
-            return EXIT_FAILURE;
-        }
-
-        yyparse();
-        interpret(root, 1, 0);
-        return EXIT_SUCCESS;
     }
+
+    yyparse();
+    interpret(root, options->debug, 0);
+    return EXIT_SUCCESS;
 }
 
