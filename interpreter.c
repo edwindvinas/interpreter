@@ -61,7 +61,8 @@ int call_sub(Sub* sub, Node* callArguments, int debug, int indention) {
         subArg = subArg->left;
     }
 
-    int result = interpret(sub->stmt, debug, indention);
+    interpret(sub->stmt, debug, indention);
+    int result = scope->return_value;
     scope = pop_scope(scope);
     return result;
 }
@@ -157,10 +158,11 @@ int interpret(Node* node, int debug, int indention) {
 
         case N_RETURN:
             if (node->left == NULL) {
-                return 0;
+                scope->return_value = 0;
             } else {
-                return interpret(node->left, debug, indention);
+                scope->return_value = interpret(node->left, debug, indention);
             }
+            return 0;
 
         case N_LOOP_BLOCK_FOR:
             times = interpret(node->middle, debug, indention);

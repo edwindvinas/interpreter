@@ -43,6 +43,7 @@ typedef struct sub {
 } Sub;
 
 typedef struct scope {
+    int return_value;
     int symbols[26];
     struct scope* previous_scope;
 } Scope;

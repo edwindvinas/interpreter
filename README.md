@@ -5,6 +5,12 @@
 * Bernhard Posselt
 * Christoph Sladkovsky
 
+## Interpreter notices
+
+* The interpreter accepts only symbols (variable/function identifiers) that are one character long
+* The language is function scoped
+* The return statement does not break execution but simply stores the return value
+
 ## Compiling
 Install **bison** and **make** and run:
 
