@@ -87,6 +87,12 @@ char* node_type_to_description(NodeType type) {
     case N_BINARY_AND:
         return "binary and";
 
+    case N_END_OF_PROGRAM:
+        return "end of program";
+
+    case N_END_OF_ARG_LIST:
+        return "end of argument list";
+
     default:
         return "unknown";
     }
