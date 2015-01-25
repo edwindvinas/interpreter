@@ -8,6 +8,7 @@ int subs[26];
 
 int interpret(Node* node) {
     if (node != NULL) {
+        int i;
 
         switch (node->type) {
 
@@ -82,6 +83,30 @@ int interpret(Node* node) {
             } else {
                 return interpret(node->left);
             }
+
+        case N_LOOP_BLOCK_FOR:
+            for (i=0; i<interpret(node->middle); i++) {
+                interpret(node->left);
+            }
+            return 0;
+
+        case N_LOOP_FOR_BLOCK:
+            for (i=0; i<interpret(node->left); i++) {
+                interpret(node->middle);
+            }
+            return 0;
+
+        case N_SUB:
+            printf("Not yet implementd\n");
+            return 0;
+
+        case N_ARGUMENT:
+            printf("Not yet implementd\n");
+            return 0;
+
+        case N_CALL:
+            printf("Not yet implementd\n");
+            return 0;
 
         default:
             printf("Unknown node type!\n");

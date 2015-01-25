@@ -24,8 +24,7 @@ typedef enum {
     N_RETURN,
     N_ARGUMENT,
     N_BINARY_OR,
-    N_BINARY_AND,
-    N_ARGUMENTS
+    N_BINARY_AND
 } NodeType;
 
 typedef struct node {

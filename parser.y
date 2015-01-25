@@ -55,8 +55,8 @@ stmt: T_LOOP stmts T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, 
     | T_SUB T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET stmts {$$ = create_node(N_SUB, $4, $6, NULL, $2);}
     | T_IF expr T_THEN stmts T_ELSE stmts {$$ = create_node(N_IF_ELSE, $2, $4, $6, 0);}
 
-arguments: T_IDENTIFIER {$$ = create_node(N_ARGUMENTS, NULL, NULL, NULL, $1);}
-         | arguments T_COMMA T_IDENTIFIER {$$ = create_node(N_ARGUMENTS, $1, NULL, NULL, $3);}
+arguments: T_IDENTIFIER {$$ = create_node(N_ARGUMENT, NULL, NULL, NULL, $1);}
+         | arguments T_COMMA T_IDENTIFIER {$$ = create_node(N_ARGUMENT, $1, NULL, NULL, $3);}
 
 expr: T_VAR T_IDENTIFIER T_ASSIGN expr {$$ = create_node(N_ASSIGNMENT, $4, NULL, NULL, $2);}
     | T_PRINT expr {$$ = create_node(N_PRINT, $2, NULL, NULL, 0);}
