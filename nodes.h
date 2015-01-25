@@ -37,3 +37,4 @@ typedef struct node {
 
 
 Node* create_node(NodeType type, Node* left, Node* middle, Node* right, int value);
+char* node_type_to_description(NodeType type);

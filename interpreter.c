@@ -7,7 +7,7 @@
 int symbols[26];
 int subs[26];
 
-void debugNode(Node* node, int indention) {
+void debug_node(Node* node, int indention) {
     char *indentionSpaces = (char*)malloc(sizeof(char)*indention + 1);
     int i;
     for (i=0; i<indention; i++) {
@@ -27,7 +27,7 @@ void debugNode(Node* node, int indention) {
 
 int interpret(Node* node, int debug, int indention) {
     if (debug == 1) {
-        debugNode(node, indention);
+        debug_node(node, indention);
     }
     indention++;
 
