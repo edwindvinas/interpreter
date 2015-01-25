@@ -1,0 +1,91 @@
+%{
+#pragma once
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "nodes.h"
+#include "interpreter.h"
+
+extern FILE* yyin;
+extern int* yylineno;
+
+void yyerror(const char *str) {
+    fprintf(stderr, "line %d: %s\n", yylineno, str);
+}
+
+%}
+%token T_VAR T_BEGIN T_END T_LOOP T_FOR T_SUB T_IF T_THEN T_ELSE T_PRINT T_RETURN
+%token T_ASSIGN T_SEMICOLON T_EQUAL T_PLUS T_MINUS T_DIVIDE T_MULTIPLY T_MODULO T_NOT T_COMMA T_BINARY_OR T_BINARY_AND T_OPEN_BRACKET T_CLOSE_BRACKET T_UNARY_MINUS
+%token T_IDENTIFIER
+%token T_INTEGER
+%start stmts
+
+%left T_BINARY_OR
+%left T_BINARY_AND
+%left T_PLUS T_MINUS
+%left T_MULTIPLY T_DIVIDE T_MODULO
+%left T_UNARY_MINUS
+
+%%
+stmts: stmt stmts {$$ = create_node(N_STMT, $1, $2);}
+     | stmt {$$ = create_node(N_STMT, $1, NULL);}
+
+stmt: /* empty */
+    | T_LOOP stmts T_FOR expr {$$ = create_node(N_LOOP_BLOCK_FOR, $2, $4, NULL, NULL)}
+    | T_LOOP T_FOR number stmts {$$ = create_node(N_LOOP_FOR_BLOCK, $3, $4, NULL, NULL)}
+    | stmt expr T_SEMICOLON
+    | T_BEGIN stmts T_END
+    | T_IF expr T_THEN stmt {$$ = create_node(N_IF, $2, $4, NULL, NULL)}
+    | T_SUB T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET stmts {$$ = create_node(N_SUB, $2, $4, $6, NULL)}
+    | T_IF expr T_THEN stmts T_ELSE stmts {} {$$ = create_node(N_IF_ELSE, $2, $4, $6, NULL)}
+
+number: T_INTEGER
+
+arguments: /* empty */
+         | T_IDENTIFIER
+         | arguments T_COMMA T_IDENTIFIER
+
+expr: T_VAR T_IDENTIFIER T_ASSIGN expr {$$ = create_node(N_ASSIGNMENT, $2, $4, NULL, NULL)}
+    | T_PRINT expr {$$ = create_node(N_PRINT, $2, NULL, NULL, NULL);}
+    | number {$$ = create_node(N_INT, NULL, NULL, NULL, $1);}
+    | expr T_EQUAL expr {$$ = create_node(N_EQUAL, $1, $2, NULL, NULL);}
+    | T_IDENTIFIER T_OPEN_BRACKET arguments T_CLOSE_BRACKET {printf("calling function");}
+    | T_IDENTIFIER {$$ = create_node(N_VARIABLE, NULL, NULL, NULL, $1);}
+    | expr T_PLUS expr {$$ = create_node(N_ADDITION, $1, $3, NULL, NULL);}
+    | expr T_MINUS expr {$$ = create_node(N_SUBTRACTION, $1, $3, NULL, NULL);}
+    | expr T_MULTIPLY expr {$$ = create_node(N_MULTIPLY, $1, $3, NULL, NULL);}
+    | expr T_DIVIDE expr {$$ = create_node(N_DIVIDE, $1, $3, NULL, NULL);}
+    | expr T_MODULO expr {$$ = create_node(N_MODULO, $1, $3, NULL, NULL);}
+    | T_MINUS expr %prec T_UNARY_MINUS {$$ = -$2;}
+    | T_OPEN_BRACKET expr T_CLOSE_BRACKET {$$ = $2;}
+    | T_NOT expr {$$ = !$2;}
+    | T_RETURN
+    | T_RETURN expr
+
+
+%%
+
+void scan_string(const char* str) {
+    yy_switch_to_buffer(yy_scan_string(str));
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        printf("Please provide a path to a program as the first parameter!\n");
+        return EXIT_FAILURE;
+    } else {
+        yyin = fopen(argv[1], "r");
+
+        if (yyin == NULL) {
+            printf("Could not read file!\n");
+            return EXIT_FAILURE;
+        }
+
+        Node* node = (Node*) yyparse();
+        interpret(node);
+        return 0;
+    }
+}
+

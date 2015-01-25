@@ -1,7 +1,7 @@
 all: clean
-	lex compiler.l
-	yacc -d -v compiler.y
-	cc lex.yy.c y.tab.c -o compiler -lfl
+	lex lexer.l
+	yacc -d -v parser.y
+	cc lex.yy.c y.tab.c nodes.c -o interpreter -lfl
 
 clean:
 	rm -f compiler
