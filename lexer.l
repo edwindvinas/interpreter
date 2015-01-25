@@ -1,6 +1,7 @@
 %option noyywrap
 
 %{
+#include "nodes.h"
 #include "y.tab.h"
 %}
 
@@ -18,8 +19,8 @@ not return T_NOT;
 return return T_RETURN;
 print return T_PRINT;
 
-[a-zA-Z][0-9a-zA-Z_]* {yylval = *yytext - 'a'; return T_IDENTIFIER;}
-[0123456789]+ {yylval = atoi(yytext); return T_INTEGER;}
+[a-zA-Z][0-9a-zA-Z_]* {yylval.integer = *yytext - 'a'; return T_IDENTIFIER;}
+[0123456789]+ {yylval.integer = atoi(yytext); return T_INTEGER;}
 ; return T_SEMICOLON;
 , return T_COMMA;
 = return T_EQUAL;
