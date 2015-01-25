@@ -1,5 +1,6 @@
-#include "interpreter.h"
 #include <stdlib.h>
+
+#include "interpreter.h"
 
 int symbols[26];
 int subs[26];
@@ -73,6 +74,13 @@ int interpret(Node* node) {
         case N_PRINT:
             printf("%d\n", interpret(node->left));
             return 0;
+
+        case N_RETURN:
+            if (node->left == NULL) {
+                return 0;
+            } else {
+                return interpret(node->left);
+            }
 
         default:
             printf("Unknown node type!\n", );

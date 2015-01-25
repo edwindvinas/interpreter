@@ -4,7 +4,8 @@ all: clean
 	cc lex.yy.c y.tab.c nodes.c -o interpreter -lfl
 
 clean:
-	rm -f compiler
+	rm -f interpreter
 	rm -f lex.yy.c
 	rm -f y.tab.c
 	rm -f y.tab.h
+	rm -f y.output

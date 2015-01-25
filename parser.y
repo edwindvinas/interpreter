@@ -6,7 +6,6 @@
 #include "nodes.h"
 #include "interpreter.h"
 
-
 extern FILE* yyin;
 extern int* yylineno;
 
