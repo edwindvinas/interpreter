@@ -7,7 +7,7 @@
 
 ## Interpreter notices
 
-* The interpreter accepts only symbols (variable/function identifiers) that are one character long (because hashmaps are hard :P)
+* The interpreter accepts only symbols (variable/function identifiers) that are one character long (because hashmaps in C are hard :P)
 * The language is function scoped
 
 ## Design questions
