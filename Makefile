@@ -9,3 +9,7 @@ clean:
 	rm -f y.tab.c
 	rm -f y.tab.h
 	rm -f y.output
+	rm -f interpreter-posselt-sladkovsky.tar.gz
+
+dist: clean
+	tar -czvf interpreter-posselt-sladkovsky.tar.gz *
