@@ -7,22 +7,29 @@
 
 ## Interpreter notices
 
-* The interpreter accepts only symbols (variable/function identifiers) that are one character long
+* The interpreter accepts only symbols (variable/function identifiers) that are one character long (because hashmaps are hard :P)
 * The language is function scoped
-* The return statement does not break execution but simply stores the return value
+
+## Dependencies
+
+* getopt
+* bison
+* make
 
 ## Compiling
-Install **bison** and **make** and run:
+Run:
 
     make
 
 ## Executing a file
 To execute a file pass the path as its first argument like:
 
-    ./compiler programs/calculations
+    ./interpreter programs/fibonacci
+
+This example program has to functions, one which calculates the fibonacci numbers in a loop and one which calculates the numbers recursively
 
 ## Debugging
 
 Run:
 
-    ./compiler programs/calculations -d
+    ./interpreter programs/fibonacci -d
