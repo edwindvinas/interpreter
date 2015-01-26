@@ -121,6 +121,18 @@ int interpret(Node* node, int debug, int indention) {
         case N_EQUAL:
             return interpret(node->left, debug, indention) == interpret(node->middle, debug, indention);
 
+        case N_LESS:
+            return interpret(node->left, debug, indention) < interpret(node->middle, debug, indention);
+
+        case N_LESS_EQUAL:
+            return interpret(node->left, debug, indention) <= interpret(node->middle, debug, indention);
+
+        case N_BIGGER:
+            return interpret(node->left, debug, indention) > interpret(node->middle, debug, indention);
+
+        case N_BIGGER_EQUAL:
+            return interpret(node->left, debug, indention) >= interpret(node->middle, debug, indention);
+
         case N_ADDITION:
             return interpret(node->left, debug, indention) + interpret(node->middle, debug, indention);
 

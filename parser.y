@@ -34,7 +34,7 @@ Node* root;
 %type <integer> T_IDENTIFIER
 
 %token T_VAR T_BEGIN T_END T_LOOP T_FOR T_SUB T_IF T_THEN T_ELSE T_PRINT T_RETURN
-%token T_ASSIGN T_SEMICOLON T_EQUAL T_PLUS T_MINUS T_DIVIDE T_MULTIPLY T_MODULO T_NOT T_COMMA T_BINARY_OR T_BINARY_AND T_OPEN_BRACKET T_CLOSE_BRACKET T_UNARY_MINUS
+%token T_BIGGER T_LESS T_LESS_EQUAL T_BIGGER_EQUAL T_ASSIGN T_SEMICOLON T_EQUAL T_PLUS T_MINUS T_DIVIDE T_MULTIPLY T_MODULO T_NOT T_COMMA T_BINARY_OR T_BINARY_AND T_OPEN_BRACKET T_CLOSE_BRACKET T_UNARY_MINUS
 %token T_IDENTIFIER
 %token T_INTEGER
 %start root
@@ -85,6 +85,10 @@ expr:
     | expr T_MULTIPLY expr {$$ = create_node(N_MULTIPLY, $1, $3, NULL, 0);}
     | expr T_DIVIDE expr {$$ = create_node(N_DIVIDE, $1, $3, NULL, 0);}
     | expr T_MODULO expr {$$ = create_node(N_MODULO, $1, $3, NULL, 0);}
+    | expr T_LESS expr {$$ = create_node(N_LESS, $1, $3, NULL, 0);}
+    | expr T_LESS_EQUAL expr {$$ = create_node(N_LESS_EQUAL, $1, $3, NULL, 0);}
+    | expr T_BIGGER expr {$$ = create_node(N_BIGGER, $1, $3, NULL, 0);}
+    | expr T_BIGGER_EQUAL expr {$$ = create_node(N_BIGGER_EQUAL, $1, $3, NULL, 0);}
     | T_MINUS expr %prec T_UNARY_MINUS {$$ = create_node(N_MINUS, $2, NULL, NULL, 0);}
     | T_OPEN_BRACKET expr T_CLOSE_BRACKET {$$ = $2;}
     | T_NOT expr {$$ = create_node(N_NOT, $2, NULL, NULL, 0);}

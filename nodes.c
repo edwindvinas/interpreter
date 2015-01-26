@@ -87,6 +87,18 @@ char* node_type_to_description(NodeType type) {
     case N_BINARY_AND:
         return "binary and";
 
+    case N_LESS:
+        return "less";
+
+    case N_LESS_EQUAL:
+        return "less equal";
+
+    case N_BIGGER:
+        return "greater";
+
+    case N_BIGGER_EQUAL:
+        return "greater equal";
+
     case N_END_OF_PROGRAM:
         return "end of program";
 

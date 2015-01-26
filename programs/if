@@ -4,3 +4,9 @@ if a = 3 then begin
 end else begin
     print a;
 end
+
+if a <= 3 then begin
+    print 10;
+end else begin
+    print 20;
+end

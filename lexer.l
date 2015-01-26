@@ -23,6 +23,10 @@ print return T_PRINT;
 [0123456789]+ {yylval.integer = atoi(yytext); return T_INTEGER;}
 ; return T_SEMICOLON;
 , return T_COMMA;
+\< return T_LESS;
+\> return T_BIGGER;
+\<= return T_LESS_EQUAL;
+\>= return T_BIGGER_EQUAL;
 = return T_EQUAL;
 := return T_ASSIGN;
 \* return T_MULTIPLY;

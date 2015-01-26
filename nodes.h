@@ -25,6 +25,10 @@ typedef enum {
     N_ARGUMENT,
     N_BINARY_OR,
     N_BINARY_AND,
+    N_LESS,
+    N_LESS_EQUAL,
+    N_BIGGER,
+    N_BIGGER_EQUAL,
     N_END_OF_PROGRAM,
     N_END_OF_ARG_LIST
 } NodeType;
