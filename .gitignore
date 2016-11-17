@@ -1,0 +1,5 @@
+interpreter
+*tar.gz
+*.output
+*.yy.c
+*.tab.*

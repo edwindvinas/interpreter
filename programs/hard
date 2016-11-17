@@ -1,0 +1,11 @@
+sub main (a, b, c) begin
+    if a = 0 then begin
+        return 2;
+    end else begin
+        return 3;
+    end
+end
+
+var a := main(0,1,2);
+
+print a;

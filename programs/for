@@ -1,0 +1,5 @@
+var a := 0;
+loop for 11 begin
+    var a := a + 2;
+    print a;
+end
