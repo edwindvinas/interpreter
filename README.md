@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # SIMPOL INTERPRETER 
+=======
+# Simple parser
+>>>>>>> 5ea248c30bb2d888d178fda4c3d3ae28e100421e
 
 ## Authors:
 
@@ -65,4 +69,8 @@ This example program has to functions, one which calculates the fibonacci number
 
 Run:
 
+<<<<<<< HEAD
     ./interpreter programs/fibonacci -d
+=======
+    ./interpreter programs/fibonacci -d
+>>>>>>> 5ea248c30bb2d888d178fda4c3d3ae28e100421e
